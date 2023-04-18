@@ -8,66 +8,7 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include <iostream>
-
-
-struct DeclRecord {
-    std::string name;
-    unsigned int lineNumber;
-    unsigned int columnNumber;
-
-    DeclRecord(std::string _name, unsigned int _lineNumber, unsigned int _columnNumber)
-        : name(_name)
-        , lineNumber(_lineNumber)
-        , columnNumber(_columnNumber) {}
-};
-
-class CodeRecordsSingleton {
-public:
-    static CodeRecordsSingleton* getInstance() {
-        if (m_pInstance == nullptr) {
-            m_pInstance = new CodeRecordsSingleton();
-        }
-        return m_pInstance;
-    }
-    void addVarDecl(std::string name, unsigned int lineNumber, unsigned int columnNumber) {
-        m_varDeclRecords.push_back( DeclRecord(name, lineNumber, columnNumber) );
-    }
-
-    void addFuncDecl(std::string name, unsigned int lineNumber, unsigned int columnNumber) {
-        m_funcDeclRecords.push_back( DeclRecord(name, lineNumber, columnNumber) );
-    }
-
-    void printVariables() {
-        std::cout << "Variables declarations count: " << m_varDeclRecords.size() << " \n";
-        for(auto it = m_varDeclRecords.begin(); it != m_varDeclRecords.end(); ++it) {
-            std::cout << "\tVariable - ";
-            printDeclaration(*it);
-        }
-    }
-
-    void printFunctions() {
-        std::cout << "Functions declarations count: " << m_funcDeclRecords.size() << " \n";
-        for(auto it = m_funcDeclRecords.begin(); it != m_funcDeclRecords.end(); ++it) {
-            std::cout << "\tFunction - ";
-            printDeclaration(*it);
-        }
-    }
-
-    void clear() {
-        m_varDeclRecords.clear();
-        m_funcDeclRecords.clear();
-    }
-private:
-    void printDeclaration(const DeclRecord& declRecord) {
-        std::cout << declRecord.name  << " at " << declRecord.lineNumber << ":" << declRecord.columnNumber << "\n";
-    }
-
-    CodeRecordsSingleton() {}
-    static CodeRecordsSingleton* m_pInstance;
-
-    std::list<DeclRecord> m_varDeclRecords;
-    std::list<DeclRecord> m_funcDeclRecords;
-};
+#include "includes/CodeRecordsSingleton.h"
 
 // рекурсивный Visitor
 class FindDeclVisitor : public clang::RecursiveASTVisitor<FindDeclVisitor> {
